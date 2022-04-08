@@ -18,14 +18,14 @@ response = requests.get(url_base + produto_nome)
 
 site = BeautifulSoup(response.text, 'html.parser')
 
-produtos = site.findAll('div', attrs={'class': 'andes-card andes-card--flat andes-card--default ui-search-result ui-search-result--core andes-card--padding-default andes-card--animated'})
+produtos = site.findAll('div', attrs={'class': 'andes-card andes-card--flat andes-card--default ui-search-result ui-search-result--core andes-card--padding-default'})
 
 
 
 for produto in produtos:
-    titulo = produto.find('h2', attrs={'class': 'ui-search-item__title ui-search-item__group__element'})
+    titulo = produto.find('h2', attrs={'class': 'ui-search-item__title'})
 
-    link = produto.find('a', attrs={'class': 'ui-search-result__content ui-search-link'})
+    link = produto.find('a', attrs={'class': 'ui-search-item__group__element ui-search-link'})
 
     cifra = produto.find('span', attrs={'class': 'price-tag-symbol'})
     real = produto.find('span', attrs={'class': 'price-tag-fraction'})
@@ -41,8 +41,8 @@ for produto in produtos:
         lista_produtos.append([titulo.text, (cifra.text + real.text + ',' + centavos.text), link['href']])
     else:
         #print(f'Preço do produto: {cifra.text} {real.text},00')
-    #print('\n\n')
         lista_produtos.append([titulo.text, (cifra.text + real.text + ',00'), link['href']])
+    #print('\n\n')
 
 
 news = pd.DataFrame(lista_produtos, columns=['Titulo', 'Preço', 'Link'])
